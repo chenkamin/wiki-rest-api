@@ -1,0 +1,81 @@
+{
+	"id": "91260bd3-d555-4731-924f-0f555eba661e",
+	"name": "wiki-rest",
+	"description": "",
+	"auth": null,
+	"events": null,
+	"variables": [],
+	"order": [
+		"390082f7-80ee-4a89-8057-5154a4f64dc9",
+		"d8bd7fc2-e0e7-4da9-bced-97eb8a55fd01"
+	],
+	"folders_order": [],
+	"protocolProfileBehavior": {},
+	"folders": [],
+	"requests": [
+		{
+			"id": "390082f7-80ee-4a89-8057-5154a4f64dc9",
+			"name": "localhost:3000/introduction/cat",
+			"url": "localhost:3000/introduction/cat",
+			"description": "",
+			"data": null,
+			"dataOptions": null,
+			"dataMode": null,
+			"headerData": [
+				{
+					"key": "Accept-language",
+					"value": "zh",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "x-authentication",
+					"value": "100d1a0bf0f588ffce26d311a1a4e1d035285743979de8c2eded5afeca97a445",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true,
+					"user-agent": true,
+					"accept": true,
+					"accept-encoding": true,
+					"connection": true
+				}
+			},
+			"headers": "//Accept-language: zh\nx-authentication: 100d1a0bf0f588ffce26d311a1a4e1d035285743979de8c2eded5afeca97a445\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "d8bd7fc2-e0e7-4da9-bced-97eb8a55fd01",
+			"name": "localhost:3000/user",
+			"url": "localhost:3000/user",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": null,
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"rawModeData": "{\"userName\": \"chedn b\", \"language\": \"zh\"}",
+			"pathVariables": {}
+		}
+	]
+}
