@@ -19,32 +19,38 @@ app.use(requestLanguage({
     }
 }));
 
-const checkLang = (lang) => langs.includes(lang)
+// const checkLang = (lang) => langs.includes(lang)
 
 //routes
 app.use('/sanity', (req, res) => {
     res.send("hello world")
 })
 
+
+const checkUserToken = (token) => users.find(u => u.token == token);
 app.get('/introduction/:articleName', async (req, res) => {
-    const lang = (req.language.split("-")[0]);
+    // const lang = (req.language.split("-")[0]);
     // console.log(langs.includes(req.language));
     // console.log(checkLang(req.language))
+    const token = (req.headers['x-authentication']);
+    // console.log(users)
+    const lang = checkUserToken(token)?.language;
+    if (!lang) {
+        res.status(404).json({ message: "Token not valid" })
+    }
+    ;
+    console.log("check", lang)
     const articleName = req.params.articleName
     if (/^[A-Za-z0-9_-]+$/.test(articleName) == false) {
-        res.status(404).json({ message: "accepted sympls are _ and - only" })
+        res.status(404).json({ message: "accepted symbols are _ and - only" })
 
     }
-    console.log("letter numbres")
     try {
         const page = await wiki.page(articleName);
-        const newUrl = await wiki.setLang(lang);
-        // console.log(page);
-        //Response of type @Page object
+        const newUrl = await wiki.setLang('en');
         const summary = await page.summary();
 
         console.log("text", summary.extract);
-        //Response of type @wikiSummary - contains the intro and the main image
         res.status(200).json({
             scrapeDate: Math.round(+new Date() / 1000),
             articleName: articleName,
@@ -52,7 +58,6 @@ app.get('/introduction/:articleName', async (req, res) => {
         })
     } catch (error) {
         console.log(error);
-        //=> Typeof wikiError
         res.status(404).json({ error })
     }
 })
@@ -64,6 +69,7 @@ app.post("/user", (req, res) => {
     const body = req.body
     body.token = crypto
         .createHash('sha256')
+        .update(req.body.userName)
         .digest('hex');
     users.push(body);
     res.status(201).json({ token: body.token })
