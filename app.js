@@ -1,12 +1,11 @@
-const express = require('express');
 const crypto = require('crypto');
-const wiki = require('wikipedia');
+const express = require('express');
 const app = express();
-const acceptLanguage = require('accept-language');
+const wiki = require('wikipedia');
 var requestLanguage = require('express-request-language');
 var cookieParser = require('cookie-parser');
 
-
+//hard-coded languages list.
 const langs = ['zh-CN', 'en-US', 'fr-FR', 'he-IL'];
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
@@ -19,7 +18,7 @@ app.use(requestLanguage({
     }
 }));
 
-// const checkLang = (lang) => langs.includes(lang)
+
 
 //routes
 app.use('/sanity', (req, res) => {
@@ -28,29 +27,21 @@ app.use('/sanity', (req, res) => {
 
 
 const checkUserToken = (token) => users.find(u => u.token == token);
+
 app.get('/introduction/:articleName', async (req, res) => {
-    // const lang = (req.language.split("-")[0]);
-    // console.log(langs.includes(req.language));
-    // console.log(checkLang(req.language))
     const token = (req.headers['x-authentication']);
-    // console.log(users)
-    const lang = checkUserToken(token)?.language;
-    if (!lang) {
+    const user = checkUserToken(token);
+    if (!user) {
         res.status(404).json({ message: "Token not valid" })
-    }
-    ;
-    console.log("check", lang)
+    };
     const articleName = req.params.articleName
     if (/^[A-Za-z0-9_-]+$/.test(articleName) == false) {
         res.status(404).json({ message: "accepted symbols are _ and - only" })
-
     }
     try {
         const page = await wiki.page(articleName);
-        const newUrl = await wiki.setLang('en');
+        await wiki.setLang(user.language);
         const summary = await page.summary();
-
-        console.log("text", summary.extract);
         res.status(200).json({
             scrapeDate: Math.round(+new Date() / 1000),
             articleName: articleName,
@@ -58,7 +49,7 @@ app.get('/introduction/:articleName', async (req, res) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(404).json({ error })
+        res.status(404).json({ message: `${error}` })
     }
 })
 
@@ -69,7 +60,7 @@ app.post("/user", (req, res) => {
     const body = req.body
     body.token = crypto
         .createHash('sha256')
-        .update(req.body.userName)
+        .update(req.body.userName+Math.random())
         .digest('hex');
     users.push(body);
     res.status(201).json({ token: body.token })
