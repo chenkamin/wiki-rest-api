@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const wiki = require('wikipedia');
 const app = express();
 const acceptLanguage = require('accept-language');
@@ -64,8 +65,8 @@ app.post("/user", (req, res) => {
     body.token = crypto
         .createHash('sha256')
         .digest('hex');
-    console.log(body)
-    res.json("sdf")
+    users.push(body);
+    res.status(201).json({ token: body.token })
 })
 
 app.all('*', (req, res, next) => {
