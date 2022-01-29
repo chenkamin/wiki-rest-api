@@ -58,7 +58,15 @@ app.get('/introduction/:articleName', async (req, res) => {
 
 
 
-
+let users = [{}];
+app.post("/user", (req, res) => {
+    const body = req.body
+    body.token = crypto
+        .createHash('sha256')
+        .digest('hex');
+    console.log(body)
+    res.json("sdf")
+})
 
 app.all('*', (req, res, next) => {
     next(res.status(404).json({ message: "route not exists" }));
