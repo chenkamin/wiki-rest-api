@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "accept-language": "^3.0.18",
+    "cookie-parser": "^1.4.6",
+    "express-request-language": "^1.1.15",
     "wikipedia": "^1.1.6"
   }
 }
